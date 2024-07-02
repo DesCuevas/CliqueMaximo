@@ -103,7 +103,7 @@ def encontrar_clique_maxima_exacta(grafo):
     cliques = list(nx.find_cliques(grafo))
     tamaño_maximo = max(len(clique) for clique in cliques)
     cliques_maximas = [clique for clique in cliques if len(clique) == tamaño_maximo]
-    return cliques_maximas
+    return cliques_maximas, tamaño_maximo
 
 # Crear y mostrar el grafo
 num_nodos = 10
@@ -111,11 +111,28 @@ probabilidad_arista = 0.5
 grafo, matriz_adyacencia = crear_grafo(num_nodos, probabilidad_arista, semilla_aleatoria)
 representar_grafo(grafo)
 
+# Comparar cliques hallados
+def comparar (cliques_maximas, mejor_clique, tamaño_maximo):
+    aux2 = []
+    aux = [i for i, val in enumerate(mejor_clique) if val == 1]
+    if len(aux) == len(cliques_maximas[0]):
+        for i in range(len(cliques_maximas)):
+            dc = 0
+            for j in range (tamaño_maximo):
+                if cliques_maximas[i][dc] == aux[j]:
+                    aux2.append(aux[j])
+                else:
+                    break
+                dc = dc+1
+        return print("Los cliques coinciden")
+    else:
+        print("No coincide el tamaño del clique")
+    
 # Encontrar cliques máximas exactas
-cliques_maximas = encontrar_clique_maxima_exacta(grafo)
+cliques_maximas, tamaño_maximo = encontrar_clique_maxima_exacta(grafo)
 print("Cliques máximas exactas encontradas:", cliques_maximas)
 for i, clique in enumerate(cliques_maximas):
-    print(f"Clique máxima {i+1}: {clique}")
+        print(f"Clique máxima {i+1}: {clique}")
 
 # Ejecutar el algoritmo genético
 mejor_clique = algoritmo_genetico(tamaño_poblacion, tasa_mutacion, tasa_cruza, generaciones, matriz_adyacencia)
@@ -124,3 +141,5 @@ mejor_clique = algoritmo_genetico(tamaño_poblacion, tasa_mutacion, tasa_cruza, 
 print("Mejor clique encontrada por el algoritmo genético:", mejor_clique)
 print("Tamaño de la clique:", sum(mejor_clique))
 print("Nodos que forman la clique máxima:", [i for i, val in enumerate(mejor_clique) if val == 1])
+
+comparar(cliques_maximas, mejor_clique, tamaño_maximo)
